@@ -74,7 +74,8 @@ h2 { margin-bottom: 0; font-size: 1.18rem; letter-spacing: -0.02em; }
 .chart-wrap { width: 100%; overflow: hidden; border-radius: 22px; background: linear-gradient(180deg, #fbfaff, #f5f1ff); border: 1px solid #ece7ff; }
 .portfolio-chart { display: block; width: 100%; height: auto; min-height: 260px; }
 .chart-grid-line { stroke: #ddd6f8; stroke-width: 1; }
-.chart-axis-label { fill: #7d7890; font-size: 12px; }
+.chart-axis-label { fill: #7d7890; font-size: 12px; font-weight: 600; }
+.chart-unit-label { fill: #5f5a74; font-size: 13px; font-weight: 800; letter-spacing: .05em; }
 .chart-area { fill: url(#portfolio-fill); }
 .chart-line { fill: none; vector-effect: non-scaling-stroke; }
 .chart-line-portfolio { stroke: var(--purple); stroke-width: 4; }
@@ -121,50 +122,43 @@ input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer;
   .hero-stats span { margin-bottom: 0; }
   .section-heading { margin-bottom: 18px; }
 
-  .chart-heading {
-    display: block;
-  }
-
+  .chart-heading { display: block; }
   .chart-legend {
+    margin-top: 14px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-    margin-top: 16px;
     max-width: none;
     font-size: .9rem;
     font-weight: 800;
-    color: var(--text);
   }
-
   .chart-legend span {
     min-height: 44px;
     padding: 10px 12px;
-    gap: 10px;
-    border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--surface-soft);
+    color: var(--text);
   }
-
   .legend-swatch {
-    flex: 0 0 28px;
-    width: 28px;
-    height: 4px;
-    border-radius: 999px;
-  }
-
-  .legend-swatch.portfolio {
-    background: var(--purple);
-  }
-
-  .legend-swatch.invested {
+    width: 30px;
     height: 0;
-    border-top: 4px dashed #d0a800;
     border-radius: 0;
+    flex: 0 0 30px;
+  }
+  .legend-swatch.portfolio {
     background: transparent;
+    border-top: 4px solid var(--purple);
+  }
+  .legend-swatch.invested {
+    background: transparent;
+    border-top: 4px dashed #d0a800;
     box-shadow: none;
   }
 
   .portfolio-chart { min-height: 220px; }
+  .chart-axis-label { fill: #5e5873; font-size: 14px; font-weight: 750; }
+  .chart-unit-label { fill: #4d4762; font-size: 14px; font-weight: 900; }
+  .chart-grid-line { stroke: #cfc6ef; stroke-width: 1.2; }
   .control-heading { align-items: flex-start; }
   .contribution-heading { margin-bottom: 10px; }
 }
@@ -173,8 +167,5 @@ input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer;
   .site-header { gap: 12px; }
   .intro { display: none; }
   .hero-value { font-size: clamp(2.4rem, 13vw, 3.3rem); }
-
-  .chart-legend {
-    grid-template-columns: 1fr;
-  }
+  .chart-legend { grid-template-columns: 1fr; }
 }
