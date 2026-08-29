@@ -3,7 +3,7 @@ window.InvestmentConfig = Object.freeze({
     initialCapital: 5000,
     contribution: 100,
     contributionFrequency: 'monthly',
-    annualReturn: 0.035,
+    annualReturn: 0.04,
     durationYears: 10
   }),
 
@@ -13,9 +13,9 @@ window.InvestmentConfig = Object.freeze({
   }),
 
   strategies: Object.freeze({
-    income: Object.freeze({ annualReturn: 0.035 }),
-    balanced: Object.freeze({ annualReturn: 0.055 }),
-    growth: Object.freeze({ annualReturn: 0.075 }),
-    equities: Object.freeze({ annualReturn: 0.095 })
+    income: Object.freeze({ annualReturn: 0.04 }),
+    balanced: Object.freeze({ annualReturn: 0.06 }),
+    growth: Object.freeze({ annualReturn: 0.08 }),
+    equities: Object.freeze({ annualReturn: 0.10 })
   })
 });
