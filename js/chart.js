@@ -1,104 +1,152 @@
 (function () {
   'use strict';
 
-  const SVG_NS = 'http://www.w3.org/2000/svg';
+  var SVG_NS = 'http://www.w3.org/2000/svg';
 
   function createSvgElement(tag, attrs) {
-    const el = document.createElementNS(SVG_NS, tag);
-    Object.entries(attrs || {}).forEach(([key, value]) => el.setAttribute(key, value));
+    var el = document.createElementNS(SVG_NS, tag);
+    var keys = Object.keys(attrs || {});
+    for (var i = 0; i < keys.length; i += 1) {
+      el.setAttribute(keys[i], String(attrs[keys[i]]));
+    }
     return el;
   }
 
+  function clearSvg(svg) {
+    while (svg.firstChild) {
+      svg.removeChild(svg.firstChild);
+    }
+  }
+
   function formatCompactCurrency(value) {
-    return new Intl.NumberFormat('fr-CH', {
-      notation: 'compact',
-      compactDisplay: 'short',
-      maximumFractionDigits: 1
-    }).format(value).replace(/k/i, 'k');
+    var absolute = Math.abs(value);
+    if (absolute >= 1000000) {
+      return (value / 1000000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + ' M';
+    }
+    if (absolute >= 1000) {
+      return (value / 1000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + ' k';
+    }
+    return Math.round(value).toLocaleString('fr-CH');
   }
 
   function renderChart(svg, simulation) {
-    if (!svg || !simulation || !Array.isArray(simulation.series) || simulation.series.length === 0) return;
+    if (!svg || !simulation || !simulation.series || simulation.series.length < 2) {
+      return;
+    }
 
-    const width = 800;
-    const height = 340;
-    const padding = { top: 20, right: 20, bottom: 40, left: 58 };
-    const innerWidth = width - padding.left - padding.right;
-    const innerHeight = height - padding.top - padding.bottom;
-    const series = simulation.series;
-    const maxValue = Math.max(...series.map((p) => Math.max(p.portfolioValue, p.investedCapital)), 1);
-    const niceMax = maxValue * 1.08;
-    const maxYears = Math.max(simulation.params.durationYears, 1);
+    var width = 800;
+    var height = 340;
+    var padding = { top: 20, right: 24, bottom: 42, left: 64 };
+    var innerWidth = width - padding.left - padding.right;
+    var innerHeight = height - padding.top - padding.bottom;
+    var series = simulation.series;
+    var maxValue = 1;
+    var i;
 
-    const x = (years) => padding.left + (years / maxYears) * innerWidth;
-    const y = (value) => padding.top + innerHeight - (value / niceMax) * innerHeight;
+    for (i = 0; i < series.length; i += 1) {
+      maxValue = Math.max(maxValue, series[i].portfolioValue, series[i].investedCapital);
+    }
 
-    svg.replaceChildren();
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    var niceMax = maxValue * 1.08;
+    var maxYears = Math.max(Number(simulation.params.durationYears) || 1, 1);
 
-    const defs = createSvgElement('defs');
-    const gradient = createSvgElement('linearGradient', { id: 'portfolio-fill', x1: '0', y1: '0', x2: '0', y2: '1' });
-    gradient.append(createSvgElement('stop', { offset: '0%', 'stop-color': '#6d46e5', 'stop-opacity': '0.24' }));
-    gradient.append(createSvgElement('stop', { offset: '100%', 'stop-color': '#6d46e5', 'stop-opacity': '0.02' }));
-    defs.append(gradient);
-    svg.append(defs);
+    function x(years) {
+      return padding.left + (years / maxYears) * innerWidth;
+    }
 
-    const gridGroup = createSvgElement('g', { class: 'chart-grid' });
-    const yTicks = 4;
-    for (let i = 0; i <= yTicks; i += 1) {
-      const value = (niceMax / yTicks) * i;
-      const py = y(value);
-      gridGroup.append(createSvgElement('line', {
+    function y(value) {
+      return padding.top + innerHeight - (value / niceMax) * innerHeight;
+    }
+
+    clearSvg(svg);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    var defs = createSvgElement('defs');
+    var gradient = createSvgElement('linearGradient', {
+      id: 'portfolio-fill',
+      x1: '0',
+      y1: '0',
+      x2: '0',
+      y2: '1'
+    });
+    gradient.appendChild(createSvgElement('stop', {
+      offset: '0%',
+      'stop-color': '#6d46e5',
+      'stop-opacity': '0.24'
+    }));
+    gradient.appendChild(createSvgElement('stop', {
+      offset: '100%',
+      'stop-color': '#6d46e5',
+      'stop-opacity': '0.02'
+    }));
+    defs.appendChild(gradient);
+    svg.appendChild(defs);
+
+    var gridGroup = createSvgElement('g', { class: 'chart-grid' });
+    var yTicks = 4;
+    for (i = 0; i <= yTicks; i += 1) {
+      var value = (niceMax / yTicks) * i;
+      var py = y(value);
+      gridGroup.appendChild(createSvgElement('line', {
         x1: padding.left,
         x2: width - padding.right,
         y1: py,
         y2: py,
         class: 'chart-grid-line'
       }));
-      const label = createSvgElement('text', {
+
+      var yLabel = createSvgElement('text', {
         x: padding.left - 10,
         y: py + 4,
         'text-anchor': 'end',
         class: 'chart-axis-label'
       });
-      label.textContent = `CHF ${formatCompactCurrency(value)}`;
-      gridGroup.append(label);
+      yLabel.textContent = 'CHF ' + formatCompactCurrency(value);
+      gridGroup.appendChild(yLabel);
     }
 
-    const xTicks = Math.min(5, maxYears);
-    for (let i = 0; i <= xTicks; i += 1) {
-      const years = (maxYears / xTicks) * i;
-      const label = createSvgElement('text', {
+    var xTicks = Math.min(5, Math.max(1, Math.round(maxYears)));
+    for (i = 0; i <= xTicks; i += 1) {
+      var years = (maxYears / xTicks) * i;
+      var roundedYears = Math.round(years);
+      var xLabel = createSvgElement('text', {
         x: x(years),
         y: height - 12,
         'text-anchor': i === 0 ? 'start' : (i === xTicks ? 'end' : 'middle'),
         class: 'chart-axis-label'
       });
-      label.textContent = `${Math.round(years)} an${Math.round(years) > 1 ? 's' : ''}`;
-      gridGroup.append(label);
+      xLabel.textContent = roundedYears + ' an' + (roundedYears > 1 ? 's' : '');
+      gridGroup.appendChild(xLabel);
     }
-    svg.append(gridGroup);
+    svg.appendChild(gridGroup);
 
     function buildPath(key) {
-      return series.map((point, index) => `${index === 0 ? 'M' : 'L'} ${x(point.elapsedYears).toFixed(2)} ${y(point[key]).toFixed(2)}`).join(' ');
+      var parts = [];
+      for (var j = 0; j < series.length; j += 1) {
+        parts.push((j === 0 ? 'M ' : 'L ') + x(series[j].elapsedYears).toFixed(2) + ' ' + y(series[j][key]).toFixed(2));
+      }
+      return parts.join(' ');
     }
 
-    const portfolioPath = buildPath('portfolioValue');
-    const investedPath = buildPath('investedCapital');
-    const areaPath = `${portfolioPath} L ${x(series.at(-1).elapsedYears).toFixed(2)} ${y(0).toFixed(2)} L ${x(0).toFixed(2)} ${y(0).toFixed(2)} Z`;
+    var portfolioPath = buildPath('portfolioValue');
+    var investedPath = buildPath('investedCapital');
+    var last = series[series.length - 1];
+    var areaPath = portfolioPath +
+      ' L ' + x(last.elapsedYears).toFixed(2) + ' ' + y(0).toFixed(2) +
+      ' L ' + x(0).toFixed(2) + ' ' + y(0).toFixed(2) + ' Z';
 
-    svg.append(createSvgElement('path', { d: areaPath, class: 'chart-area' }));
-    svg.append(createSvgElement('path', { d: investedPath, class: 'chart-line chart-line-invested' }));
-    svg.append(createSvgElement('path', { d: portfolioPath, class: 'chart-line chart-line-portfolio' }));
+    svg.appendChild(createSvgElement('path', { d: areaPath, class: 'chart-area' }));
+    svg.appendChild(createSvgElement('path', { d: investedPath, class: 'chart-line chart-line-invested' }));
+    svg.appendChild(createSvgElement('path', { d: portfolioPath, class: 'chart-line chart-line-portfolio' }));
 
-    const last = series.at(-1);
-    svg.append(createSvgElement('circle', {
+    svg.appendChild(createSvgElement('circle', {
       cx: x(last.elapsedYears),
       cy: y(last.portfolioValue),
       r: 5,
       class: 'chart-endpoint portfolio-endpoint'
     }));
-    svg.append(createSvgElement('circle', {
+    svg.appendChild(createSvgElement('circle', {
       cx: x(last.elapsedYears),
       cy: y(last.investedCapital),
       r: 4,
@@ -106,5 +154,7 @@
     }));
   }
 
-  window.InvestmentChart = Object.freeze({ renderChart });
+  window.InvestmentChart = Object.freeze({
+    renderChart: renderChart
+  });
 }());
