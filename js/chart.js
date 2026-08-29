@@ -85,8 +85,8 @@
 
     var defs = createSvgElement('defs');
     var gradient = createSvgElement('linearGradient', { id: 'portfolio-fill', x1: '0', y1: '0', x2: '0', y2: '1' });
-    gradient.appendChild(createSvgElement('stop', { offset: '0%', 'stop-color': '#6d46e5', 'stop-opacity': '0.24' }));
-    gradient.appendChild(createSvgElement('stop', { offset: '100%', 'stop-color': '#6d46e5', 'stop-opacity': '0.02' }));
+    gradient.appendChild(createSvgElement('stop', { offset: '0%', 'stop-color': '#32cd32', 'stop-opacity': '0.22' }));
+    gradient.appendChild(createSvgElement('stop', { offset: '100%', 'stop-color': '#84e184', 'stop-opacity': '0.03' }));
     defs.appendChild(gradient);
     svg.appendChild(defs);
 
