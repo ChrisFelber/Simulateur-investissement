@@ -2,7 +2,8 @@
   'use strict';
 
   const state = {
-    contributionFrequency: 'monthly'
+    contributionFrequency: 'monthly',
+    selectedStrategy: 'income'
   };
 
   const formatCurrency = new Intl.NumberFormat('fr-CH', {
@@ -33,6 +34,7 @@
       gains: document.getElementById('gains'),
       performance: document.getElementById('performance'),
       frequencyButtons: Array.from(document.querySelectorAll('.frequency-button')),
+      strategyButtons: Array.from(document.querySelectorAll('.strategy-button')),
       portfolioChart: document.getElementById('portfolio-chart')
     };
   }
@@ -61,6 +63,14 @@
     elements.performance.textContent = formatPercent(result.performance, 1);
   }
 
+  function updateStrategySelection(elements) {
+    elements.strategyButtons.forEach((button) => {
+      const isActive = button.dataset.strategy === state.selectedStrategy;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
   function refresh(elements) {
     const inputs = readInputs(elements);
     const result = window.InvestmentSimulation.simulateInvestment(inputs);
@@ -87,12 +97,21 @@
     refresh(elements);
   }
 
+  function setStrategy(elements, strategyKey) {
+    const strategy = window.InvestmentConfig.strategies[strategyKey];
+    if (!strategy) return;
+
+    state.selectedStrategy = strategyKey;
+    elements.annualReturn.value = String(strategy.annualReturn * 100);
+    updateStrategySelection(elements);
+    refresh(elements);
+  }
+
   function init() {
     const elements = getElements();
     const rangeInputs = [
       elements.initialCapital,
       elements.contribution,
-      elements.annualReturn,
       elements.durationYears
     ];
 
@@ -100,10 +119,21 @@
       input.addEventListener('input', () => refresh(elements));
     });
 
+    elements.annualReturn.addEventListener('input', () => {
+      state.selectedStrategy = null;
+      updateStrategySelection(elements);
+      refresh(elements);
+    });
+
     elements.frequencyButtons.forEach((button) => {
       button.addEventListener('click', () => setFrequency(elements, button.dataset.frequency));
     });
 
+    elements.strategyButtons.forEach((button) => {
+      button.addEventListener('click', () => setStrategy(elements, button.dataset.strategy));
+    });
+
+    updateStrategySelection(elements);
     refresh(elements);
   }
 
