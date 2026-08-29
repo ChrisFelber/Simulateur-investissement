@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#6D46E5">
   <title>Simulateur d’investissement</title>
-  <link rel="stylesheet" href="css/styles.css?v=20260829-4">
+  <link rel="stylesheet" href="css/styles.css?v=20260829-5">
 </head>
 <body>
   <div class="app-shell">
@@ -59,8 +59,32 @@
           <div class="control-group"><div class="control-heading"><label for="duration-years">Durée d’investissement</label><output id="duration-years-output" for="duration-years">10 ans</output></div><input id="duration-years" type="range" min="1" max="40" step="1" value="10"><div class="range-scale"><span>1 an</span><span>40 ans</span></div></div>
         </article>
 
-        <article class="card strategy-preview" aria-label="Aperçu des stratégies">
-          <p class="card-label">Stratégies</p><h2>Étape suivante</h2><p>Les profils Revenu, Équilibré, Croissance et Actions seront branchés après le graphique.</p>
+        <article class="card strategies-card" aria-labelledby="strategies-title">
+          <div class="section-heading strategies-heading">
+            <div>
+              <p class="card-label">Stratégies</p>
+              <h2 id="strategies-title">Choisissez une hypothèse</h2>
+            </div>
+          </div>
+          <div class="strategy-grid" role="group" aria-label="Hypothèses de rendement">
+            <button type="button" class="strategy-button is-active" data-strategy="income" aria-pressed="true">
+              <span class="strategy-topline"><strong>Revenu</strong><b>3,5 %</b></span>
+              <small>Priorité à la stabilité</small>
+            </button>
+            <button type="button" class="strategy-button" data-strategy="balanced" aria-pressed="false">
+              <span class="strategy-topline"><strong>Équilibré</strong><b>5,5 %</b></span>
+              <small>Équilibre rendement / risque</small>
+            </button>
+            <button type="button" class="strategy-button" data-strategy="growth" aria-pressed="false">
+              <span class="strategy-topline"><strong>Croissance</strong><b>7,5 %</b></span>
+              <small>Potentiel de croissance accru</small>
+            </button>
+            <button type="button" class="strategy-button" data-strategy="equities" aria-pressed="false">
+              <span class="strategy-topline"><strong>Actions</strong><b>9,5 %</b></span>
+              <small>Hypothèse la plus dynamique</small>
+            </button>
+          </div>
+          <p class="strategy-note">Ces rendements sont des hypothèses de simulation, pas des performances garanties.</p>
         </article>
       </aside>
     </main>
@@ -70,6 +94,6 @@
   <script src="js/simulation.js?v=20260829-1"></script>
   <script src="js/chart.js?v=20260829-7"></script>
   <script src="js/i18n.js?v=20260829-1"></script>
-  <script src="js/app.js?v=20260829-2"></script>
+  <script src="js/app.js?v=20260829-3"></script>
 </body>
 </html>
