@@ -47,7 +47,7 @@
     var width = 800;
     var height = 340;
     var padding = isMobile
-      ? { top: 34, right: 20, bottom: 48, left: 48 }
+      ? { top: 38, right: 22, bottom: 54, left: 118 }
       : { top: 20, right: 24, bottom: 42, left: 64 };
     var innerWidth = width - padding.left - padding.right;
     var innerHeight = height - padding.top - padding.bottom;
@@ -101,7 +101,7 @@
     if (isMobile) {
       var unitLabel = createSvgElement('text', {
         x: padding.left,
-        y: 18,
+        y: 23,
         'text-anchor': 'start',
         class: 'chart-unit-label'
       });
@@ -121,8 +121,8 @@
       }));
 
       var yLabel = createSvgElement('text', {
-        x: padding.left - 9,
-        y: py + 5,
+        x: padding.left - 14,
+        y: py + 7,
         'text-anchor': 'end',
         class: 'chart-axis-label chart-axis-label-y'
       });
@@ -136,7 +136,7 @@
       while (year < maxYears) {
         var mobileXLabel = createSvgElement('text', {
           x: x(year),
-          y: height - 13,
+          y: height - 15,
           'text-anchor': year === 0 ? 'start' : 'middle',
           class: 'chart-axis-label chart-axis-label-x'
         });
@@ -147,7 +147,7 @@
 
       var finalXLabel = createSvgElement('text', {
         x: x(maxYears),
-        y: height - 13,
+        y: height - 15,
         'text-anchor': 'end',
         class: 'chart-axis-label chart-axis-label-x'
       });
