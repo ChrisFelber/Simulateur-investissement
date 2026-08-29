@@ -94,7 +94,7 @@
 
     elements.initialCapitalOutput.textContent = formatCurrency(inputs.initialCapital);
     elements.contributionOutput.textContent = `${formatCurrency(inputs.contribution)}${frequencySuffix}`;
-    elements.annualReturnOutput.textContent = formatPercent(inputs.annualReturn, 1);
+    elements.annualReturnOutput.textContent = formatPercent(inputs.annualReturn, 0);
     elements.durationYearsOutput.textContent = `${inputs.durationYears} ${i18n().t(inputs.durationYears === 1 ? 'year' : 'years')}`;
 
     elements.portfolioValue.textContent = formatCurrency(result.portfolioValue);
