@@ -155,10 +155,10 @@ input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer;
     box-shadow: none;
   }
 
-  .portfolio-chart { min-height: 220px; }
-  .chart-axis-label { fill: #5e5873; font-size: 14px; font-weight: 750; }
-  .chart-unit-label { fill: #4d4762; font-size: 14px; font-weight: 900; }
-  .chart-grid-line { stroke: #cfc6ef; stroke-width: 1.2; }
+  .portfolio-chart { min-height: 250px; }
+  .chart-axis-label { fill: #4f4965; font-size: 26px; font-weight: 800; }
+  .chart-unit-label { fill: #413b57; font-size: 28px; font-weight: 900; letter-spacing: .04em; }
+  .chart-grid-line { stroke: #c8bee9; stroke-width: 1.5; }
   .control-heading { align-items: flex-start; }
   .contribution-heading { margin-bottom: 10px; }
 }
@@ -168,4 +168,6 @@ input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer;
   .intro { display: none; }
   .hero-value { font-size: clamp(2.4rem, 13vw, 3.3rem); }
   .chart-legend { grid-template-columns: 1fr; }
+  .chart-axis-label { font-size: 29px; }
+  .chart-unit-label { font-size: 31px; }
 }
