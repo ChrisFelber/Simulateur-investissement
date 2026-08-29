@@ -121,7 +121,7 @@
     if (isMobile) {
       var unitLabel = createSvgElement('text', {
         x: padding.left - 14,
-        y: padding.top - 17,
+        y: padding.top - 25,
         'text-anchor': 'end',
         class: 'chart-unit-label'
       });
