@@ -24,9 +24,18 @@
       return (value / 1000000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + ' M';
     }
     if (absolute >= 1000) {
-      return (value / 1000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + ' k';
+      return (value / 1000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + 'k';
     }
     return Math.round(value).toLocaleString('fr-CH');
+  }
+
+  function getNiceYearStep(maxYears) {
+    var rawStep = maxYears / 4;
+    var steps = [1, 2, 5, 10, 20];
+    for (var i = 0; i < steps.length; i += 1) {
+      if (steps[i] >= rawStep) return steps[i];
+    }
+    return 20;
   }
 
   function renderChart(svg, simulation) {
@@ -34,9 +43,12 @@
       return;
     }
 
+    var isMobile = window.innerWidth <= 640;
     var width = 800;
     var height = 340;
-    var padding = { top: 20, right: 24, bottom: 42, left: 64 };
+    var padding = isMobile
+      ? { top: 34, right: 20, bottom: 48, left: 48 }
+      : { top: 20, right: 24, bottom: 42, left: 64 };
     var innerWidth = width - padding.left - padding.right;
     var innerHeight = height - padding.top - padding.bottom;
     var series = simulation.series;
@@ -84,7 +96,19 @@
     svg.appendChild(defs);
 
     var gridGroup = createSvgElement('g', { class: 'chart-grid' });
-    var yTicks = 4;
+    var yTicks = isMobile ? 3 : 4;
+
+    if (isMobile) {
+      var unitLabel = createSvgElement('text', {
+        x: padding.left,
+        y: 18,
+        'text-anchor': 'start',
+        class: 'chart-unit-label'
+      });
+      unitLabel.textContent = 'CHF';
+      gridGroup.appendChild(unitLabel);
+    }
+
     for (i = 0; i <= yTicks; i += 1) {
       var value = (niceMax / yTicks) * i;
       var py = y(value);
@@ -97,27 +121,52 @@
       }));
 
       var yLabel = createSvgElement('text', {
-        x: padding.left - 10,
-        y: py + 4,
+        x: padding.left - 9,
+        y: py + 5,
         'text-anchor': 'end',
-        class: 'chart-axis-label'
+        class: 'chart-axis-label chart-axis-label-y'
       });
-      yLabel.textContent = 'CHF ' + formatCompactCurrency(value);
+      yLabel.textContent = (isMobile ? '' : 'CHF ') + formatCompactCurrency(value);
       gridGroup.appendChild(yLabel);
     }
 
-    var xTicks = Math.min(5, Math.max(1, Math.round(maxYears)));
-    for (i = 0; i <= xTicks; i += 1) {
-      var years = (maxYears / xTicks) * i;
-      var roundedYears = Math.round(years);
-      var xLabel = createSvgElement('text', {
-        x: x(years),
-        y: height - 12,
-        'text-anchor': i === 0 ? 'start' : (i === xTicks ? 'end' : 'middle'),
-        class: 'chart-axis-label'
+    if (isMobile) {
+      var yearStep = getNiceYearStep(maxYears);
+      var year = 0;
+      while (year < maxYears) {
+        var mobileXLabel = createSvgElement('text', {
+          x: x(year),
+          y: height - 13,
+          'text-anchor': year === 0 ? 'start' : 'middle',
+          class: 'chart-axis-label chart-axis-label-x'
+        });
+        mobileXLabel.textContent = String(year);
+        gridGroup.appendChild(mobileXLabel);
+        year += yearStep;
+      }
+
+      var finalXLabel = createSvgElement('text', {
+        x: x(maxYears),
+        y: height - 13,
+        'text-anchor': 'end',
+        class: 'chart-axis-label chart-axis-label-x'
       });
-      xLabel.textContent = roundedYears + ' an' + (roundedYears > 1 ? 's' : '');
-      gridGroup.appendChild(xLabel);
+      finalXLabel.textContent = String(Math.round(maxYears));
+      gridGroup.appendChild(finalXLabel);
+    } else {
+      var xTicks = Math.min(5, Math.max(1, Math.round(maxYears)));
+      for (i = 0; i <= xTicks; i += 1) {
+        var years = (maxYears / xTicks) * i;
+        var roundedYears = Math.round(years);
+        var xLabel = createSvgElement('text', {
+          x: x(years),
+          y: height - 12,
+          'text-anchor': i === 0 ? 'start' : (i === xTicks ? 'end' : 'middle'),
+          class: 'chart-axis-label chart-axis-label-x'
+        });
+        xLabel.textContent = roundedYears + ' an' + (roundedYears > 1 ? 's' : '');
+        gridGroup.appendChild(xLabel);
+      }
     }
     svg.appendChild(gridGroup);
 
