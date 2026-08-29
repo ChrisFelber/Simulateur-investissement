@@ -3,8 +3,7 @@
 
   const state = {
     contributionFrequency: 'monthly',
-    selectedStrategy: 'income',
-    customReturnVisible: false
+    selectedStrategy: 'income'
   };
 
   function i18n() {
@@ -31,8 +30,6 @@
       initialCapital: document.getElementById('initial-capital'),
       contribution: document.getElementById('contribution'),
       annualReturn: document.getElementById('annual-return'),
-      annualReturnGroup: document.getElementById('annual-return-group'),
-      customReturnButton: document.getElementById('custom-return-button'),
       durationYears: document.getElementById('duration-years'),
       initialCapitalOutput: document.getElementById('initial-capital-output'),
       contributionOutput: document.getElementById('contribution-output'),
@@ -81,17 +78,9 @@
     });
   }
 
-  function updateCustomReturnControl(elements) {
-    if (!elements.annualReturnGroup || !elements.customReturnButton) return;
-    elements.annualReturnGroup.hidden = !state.customReturnVisible;
-    elements.customReturnButton.setAttribute('aria-expanded', String(state.customReturnVisible));
-    elements.customReturnButton.textContent = i18n().t(state.customReturnVisible ? 'hideCustomReturn' : 'customizeReturn');
-  }
-
   function updateLanguage(elements) {
     i18n().apply(document);
     if (elements.languageButton) elements.languageButton.textContent = i18n().getLanguage().toUpperCase();
-    updateCustomReturnControl(elements);
   }
 
   function refresh(elements) {
@@ -150,13 +139,6 @@
       button.addEventListener('click', () => setStrategy(elements, button.dataset.strategy));
     });
 
-    if (elements.customReturnButton) {
-      elements.customReturnButton.addEventListener('click', () => {
-        state.customReturnVisible = !state.customReturnVisible;
-        updateCustomReturnControl(elements);
-      });
-    }
-
     if (elements.languageButton) {
       elements.languageButton.addEventListener('click', () => {
         i18n().nextLanguage();
@@ -167,7 +149,6 @@
 
     updateLanguage(elements);
     updateStrategySelection(elements);
-    updateCustomReturnControl(elements);
     refresh(elements);
   }
 
