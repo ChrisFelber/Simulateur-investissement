@@ -1,0 +1,68 @@
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #100e1c;
+  --surface: #1a1728;
+  --surface-soft: #242036;
+  --text: #f3f0ff;
+  --muted: #aaa4be;
+  --border: #37314d;
+  --purple: #9675ff;
+  --purple-dark: #b9a4ff;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at top left, rgba(109, 70, 229, 0.18), transparent 34%),
+    linear-gradient(180deg, #151222 0%, var(--bg) 100%);
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .hero-card {
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .card {
+  background: rgba(26, 23, 40, 0.94);
+}
+
+:root[data-theme="dark"] .icon-button {
+  background: rgba(26, 23, 40, 0.88);
+}
+
+:root[data-theme="dark"] .chart-wrap {
+  background: linear-gradient(180deg, #1d1930, #171425);
+  border-color: var(--border);
+}
+
+:root[data-theme="dark"] .chart-grid-line {
+  stroke: #47405f;
+}
+
+:root[data-theme="dark"] .chart-axis-label,
+:root[data-theme="dark"] .chart-unit-label {
+  fill: #c9c2dc;
+}
+
+:root[data-theme="dark"] .frequency-button.is-active {
+  background: #302a45;
+  color: #d9d0ff;
+}
+
+:root[data-theme="dark"] .strategy-button {
+  background: #1d1a2c;
+}
+
+:root[data-theme="dark"] .strategy-button:hover {
+  border-color: #66578f;
+}
+
+:root[data-theme="dark"] .strategy-button.is-active {
+  background: linear-gradient(135deg, #302650, #211c34);
+  border-color: var(--purple);
+  box-shadow: 0 10px 28px rgba(109, 70, 229, .18), inset 0 0 0 1px rgba(150,117,255,.10);
+}
+
+:root[data-theme="dark"] .chart-legend span {
+  color: var(--text);
+}
