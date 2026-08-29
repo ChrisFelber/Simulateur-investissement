@@ -78,7 +78,15 @@
     const inputs = readInputs(elements);
     const result = window.InvestmentSimulation.simulateInvestment(inputs);
     updateOutputs(elements, inputs, result);
-    window.InvestmentChart.renderChart(elements.portfolioChart, result);
+
+    if (window.InvestmentChart && typeof window.InvestmentChart.renderChart === 'function' && elements.portfolioChart) {
+      try {
+        window.InvestmentChart.renderChart(elements.portfolioChart, result);
+      } catch (error) {
+        console.error('Erreur de rendu du graphique :', error);
+      }
+    }
+
     window.currentInvestmentSimulation = result;
   }
 
