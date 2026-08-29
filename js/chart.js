@@ -15,7 +15,17 @@
   }
 
   function t(key) {
-    return window.InvestmentI18n ? window.InvestmentI18n.t(key) : key;
+    var fallbacks = {
+      yearsAxis: { fr: 'Années', de: 'Jahre', en: 'Years' },
+      year: { fr: 'an', de: 'Jahr', en: 'year' },
+      years: { fr: 'ans', de: 'Jahre', en: 'years' }
+    };
+    if (window.InvestmentI18n && typeof window.InvestmentI18n.t === 'function') {
+      var translated = window.InvestmentI18n.t(key);
+      if (translated && translated !== key) return translated;
+    }
+    var language = document.documentElement.lang || 'fr';
+    return fallbacks[key] && fallbacks[key][language] ? fallbacks[key][language] : key;
   }
 
   function formatCompactCurrency(value) {
@@ -32,6 +42,7 @@
     var niceFraction;
     if (fraction <= 1) niceFraction = 1;
     else if (fraction <= 2) niceFraction = 2;
+    else if (fraction <= 2.5) niceFraction = 2.5;
     else if (fraction <= 5) niceFraction = 5;
     else niceFraction = 10;
     return niceFraction * Math.pow(10, exponent);
@@ -59,13 +70,10 @@
 
     for (i = 0; i < series.length; i += 1) maxValue = Math.max(maxValue, series[i].portfolioValue, series[i].investedCapital);
 
-    var yTicks = isMobile ? 3 : 4;
-    var yStep = getNiceStep(maxValue / yTicks);
-    var niceMax = yStep * yTicks;
-    if (niceMax < maxValue) {
-      niceMax += yStep;
-      yTicks += 1;
-    }
+    var targetTicks = isMobile ? 4 : 5;
+    var yStep = getNiceStep(maxValue / targetTicks);
+    var niceMax = Math.ceil(maxValue / yStep) * yStep;
+    var yTicks = Math.max(1, Math.round(niceMax / yStep));
 
     var maxYears = Math.max(Number(simulation.params.durationYears) || 1, 1);
     function x(years) { return padding.left + (years / maxYears) * innerWidth; }
