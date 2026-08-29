@@ -6,8 +6,24 @@
     selectedStrategy: 'income'
   };
 
+  const fallbackI18n = {
+    getLocale: function () { return 'fr-CH'; },
+    getLanguage: function () { return 'fr'; },
+    t: function (key) {
+      const values = {
+        perWeek: '/semaine',
+        perMonth: '/mois',
+        year: 'an',
+        years: 'ans'
+      };
+      return values[key] || key;
+    },
+    apply: function () {},
+    nextLanguage: function () { return 'fr'; }
+  };
+
   function i18n() {
-    return window.InvestmentI18n;
+    return window.InvestmentI18n || fallbackI18n;
   }
 
   function formatCurrency(value) {
@@ -46,6 +62,23 @@
     };
   }
 
+  function hasCoreElements(elements) {
+    return Boolean(
+      elements.initialCapital &&
+      elements.contribution &&
+      elements.annualReturn &&
+      elements.durationYears &&
+      elements.initialCapitalOutput &&
+      elements.contributionOutput &&
+      elements.annualReturnOutput &&
+      elements.durationYearsOutput &&
+      elements.portfolioValue &&
+      elements.investedCapital &&
+      elements.gains &&
+      elements.performance
+    );
+  }
+
   function readInputs(elements) {
     return {
       initialCapital: Number(elements.initialCapital.value),
@@ -79,27 +112,40 @@
   }
 
   function updateLanguage(elements) {
-    i18n().apply(document);
-    if (elements.languageButton) elements.languageButton.textContent = i18n().getLanguage().toUpperCase();
+    const module = i18n();
+    if (typeof module.apply === 'function') module.apply(document);
+    if (elements.languageButton && typeof module.getLanguage === 'function') {
+      elements.languageButton.textContent = module.getLanguage().toUpperCase();
+    }
   }
 
   function refresh(elements) {
-    const inputs = readInputs(elements);
-    const result = window.InvestmentSimulation.simulateInvestment(inputs);
-    updateOutputs(elements, inputs, result);
-
-    if (window.InvestmentChart && typeof window.InvestmentChart.renderChart === 'function' && elements.portfolioChart) {
-      try {
-        window.InvestmentChart.renderChart(elements.portfolioChart, result);
-      } catch (error) {
-        console.error('Chart rendering error:', error);
-      }
+    if (!window.InvestmentSimulation || typeof window.InvestmentSimulation.simulateInvestment !== 'function') {
+      console.error('InvestmentSimulation is unavailable.');
+      return;
     }
 
-    window.currentInvestmentSimulation = result;
+    try {
+      const inputs = readInputs(elements);
+      const result = window.InvestmentSimulation.simulateInvestment(inputs);
+      updateOutputs(elements, inputs, result);
+
+      if (window.InvestmentChart && typeof window.InvestmentChart.renderChart === 'function' && elements.portfolioChart) {
+        try {
+          window.InvestmentChart.renderChart(elements.portfolioChart, result);
+        } catch (error) {
+          console.error('Chart rendering error:', error);
+        }
+      }
+
+      window.currentInvestmentSimulation = result;
+    } catch (error) {
+      console.error('Simulation update error:', error);
+    }
   }
 
   function setFrequency(elements, frequency) {
+    if (frequency !== 'monthly' && frequency !== 'weekly') return;
     state.contributionFrequency = frequency;
     elements.frequencyButtons.forEach((button) => {
       const isActive = button.dataset.frequency === frequency;
@@ -110,8 +156,9 @@
   }
 
   function setStrategy(elements, strategyKey) {
-    const strategy = window.InvestmentConfig.strategies[strategyKey];
-    if (!strategy) return;
+    const config = window.InvestmentConfig;
+    const strategy = config && config.strategies ? config.strategies[strategyKey] : null;
+    if (!strategy || !Number.isFinite(strategy.annualReturn)) return;
 
     state.selectedStrategy = strategyKey;
     elements.annualReturn.value = String(strategy.annualReturn * 100);
@@ -121,9 +168,15 @@
 
   function init() {
     const elements = getElements();
-    const rangeInputs = [elements.initialCapital, elements.contribution, elements.durationYears];
 
-    rangeInputs.forEach((input) => input.addEventListener('input', () => refresh(elements)));
+    if (!hasCoreElements(elements)) {
+      console.error('The simulator could not start because a required interface element is missing.');
+      return;
+    }
+
+    [elements.initialCapital, elements.contribution, elements.durationYears].forEach((input) => {
+      input.addEventListener('input', () => refresh(elements));
+    });
 
     elements.annualReturn.addEventListener('input', () => {
       state.selectedStrategy = null;
@@ -139,11 +192,12 @@
       button.addEventListener('click', () => setStrategy(elements, button.dataset.strategy));
     });
 
-    if (elements.languageButton) {
+    if (elements.languageButton && window.InvestmentI18n && typeof window.InvestmentI18n.nextLanguage === 'function') {
       elements.languageButton.addEventListener('click', () => {
-        i18n().nextLanguage();
+        window.InvestmentI18n.nextLanguage();
         updateLanguage(elements);
         refresh(elements);
+        document.dispatchEvent(new Event('investment-language-change'));
       });
     }
 
