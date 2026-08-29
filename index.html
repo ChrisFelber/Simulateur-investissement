@@ -27,42 +27,30 @@
           <p class="card-label">Valeur estimée du portefeuille</p>
           <p class="hero-value" id="portfolio-value">CHF 0</p>
           <div class="hero-stats" aria-label="Résumé de la simulation">
-            <div>
-              <span>Capital investi</span>
-              <strong id="invested-capital">CHF 0</strong>
-            </div>
-            <div>
-              <span>Gains générés</span>
-              <strong id="gains">CHF 0</strong>
-            </div>
-            <div>
-              <span>Performance</span>
-              <strong id="performance">0 %</strong>
-            </div>
+            <div><span>Capital investi</span><strong id="invested-capital">CHF 0</strong></div>
+            <div><span>Gains générés</span><strong id="gains">CHF 0</strong></div>
+            <div><span>Performance</span><strong id="performance">0 %</strong></div>
           </div>
         </article>
 
         <article class="card chart-card">
-          <div class="section-heading">
+          <div class="section-heading chart-heading">
             <div>
               <p class="card-label">Évolution</p>
               <h2>Projection du portefeuille</h2>
             </div>
-            <span class="coming-soon">Graphique à l’étape 4</span>
+            <div class="chart-legend" aria-label="Légende du graphique">
+              <span><i class="legend-swatch portfolio"></i>Portefeuille</span>
+              <span><i class="legend-swatch invested"></i>Capital investi</span>
+            </div>
           </div>
-          <div class="chart-placeholder" aria-label="Emplacement réservé pour le graphique">
-            <div class="placeholder-line"></div>
-            <p>Le graphique interactif sera ajouté à l’étape suivante.</p>
+          <div class="chart-wrap">
+            <svg id="portfolio-chart" class="portfolio-chart" viewBox="0 0 800 340" role="img" aria-label="Graphique de projection du portefeuille"></svg>
           </div>
         </article>
 
         <article class="card details-card">
-          <div class="section-heading">
-            <div>
-              <p class="card-label">Détails</p>
-              <h2>Votre projection en bref</h2>
-            </div>
-          </div>
+          <div class="section-heading"><div><p class="card-label">Détails</p><h2>Votre projection en bref</h2></div></div>
           <dl class="details-grid">
             <div><dt>Capital initial</dt><dd id="detail-initial">CHF 0</dd></div>
             <div><dt>Total des versements</dt><dd id="detail-contributions">CHF 0</dd></div>
@@ -76,58 +64,15 @@
 
       <aside class="controls-column" aria-label="Paramètres de la simulation">
         <article class="card controls-card">
-          <div class="section-heading">
-            <div>
-              <p class="card-label">Paramètres</p>
-              <h2>Ajustez votre projection</h2>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <div class="control-heading">
-              <label for="initial-capital">Capital initial</label>
-              <output id="initial-capital-output" for="initial-capital">CHF 5’000</output>
-            </div>
-            <input id="initial-capital" type="range" min="0" max="100000" step="500" value="5000">
-            <div class="range-scale"><span>CHF 0</span><span>CHF 100’000</span></div>
-          </div>
-
-          <div class="control-group">
-            <div class="control-heading contribution-heading">
-              <label for="contribution">Versement régulier</label>
-              <output id="contribution-output" for="contribution">CHF 100/mois</output>
-            </div>
-            <div class="frequency-toggle" role="group" aria-label="Fréquence des versements">
-              <button type="button" class="frequency-button is-active" data-frequency="monthly" aria-pressed="true">Mensuel</button>
-              <button type="button" class="frequency-button" data-frequency="weekly" aria-pressed="false">Hebdomadaire</button>
-            </div>
-            <input id="contribution" type="range" min="0" max="5000" step="50" value="100">
-            <div class="range-scale"><span>CHF 0</span><span>CHF 5’000</span></div>
-          </div>
-
-          <div class="control-group">
-            <div class="control-heading">
-              <label for="annual-return">Rendement annuel moyen</label>
-              <output id="annual-return-output" for="annual-return">3,5 %</output>
-            </div>
-            <input id="annual-return" type="range" min="0" max="15" step="0.1" value="3.5">
-            <div class="range-scale"><span>0 %</span><span>15 %</span></div>
-          </div>
-
-          <div class="control-group">
-            <div class="control-heading">
-              <label for="duration-years">Durée d’investissement</label>
-              <output id="duration-years-output" for="duration-years">10 ans</output>
-            </div>
-            <input id="duration-years" type="range" min="1" max="40" step="1" value="10">
-            <div class="range-scale"><span>1 an</span><span>40 ans</span></div>
-          </div>
+          <div class="section-heading"><div><p class="card-label">Paramètres</p><h2>Ajustez votre projection</h2></div></div>
+          <div class="control-group"><div class="control-heading"><label for="initial-capital">Capital initial</label><output id="initial-capital-output" for="initial-capital">CHF 5’000</output></div><input id="initial-capital" type="range" min="0" max="100000" step="500" value="5000"><div class="range-scale"><span>CHF 0</span><span>CHF 100’000</span></div></div>
+          <div class="control-group"><div class="control-heading contribution-heading"><label for="contribution">Versement régulier</label><output id="contribution-output" for="contribution">CHF 100/mois</output></div><div class="frequency-toggle" role="group" aria-label="Fréquence des versements"><button type="button" class="frequency-button is-active" data-frequency="monthly" aria-pressed="true">Mensuel</button><button type="button" class="frequency-button" data-frequency="weekly" aria-pressed="false">Hebdomadaire</button></div><input id="contribution" type="range" min="0" max="5000" step="50" value="100"><div class="range-scale"><span>CHF 0</span><span>CHF 5’000</span></div></div>
+          <div class="control-group"><div class="control-heading"><label for="annual-return">Rendement annuel moyen</label><output id="annual-return-output" for="annual-return">3,5 %</output></div><input id="annual-return" type="range" min="0" max="15" step="0.1" value="3.5"><div class="range-scale"><span>0 %</span><span>15 %</span></div></div>
+          <div class="control-group"><div class="control-heading"><label for="duration-years">Durée d’investissement</label><output id="duration-years-output" for="duration-years">10 ans</output></div><input id="duration-years" type="range" min="1" max="40" step="1" value="10"><div class="range-scale"><span>1 an</span><span>40 ans</span></div></div>
         </article>
 
         <article class="card strategy-preview" aria-label="Aperçu des stratégies">
-          <p class="card-label">Stratégies</p>
-          <h2>Étape suivante</h2>
-          <p>Les profils Revenu, Équilibré, Croissance et Actions seront branchés après le graphique.</p>
+          <p class="card-label">Stratégies</p><h2>Étape suivante</h2><p>Les profils Revenu, Équilibré, Croissance et Actions seront branchés après le graphique.</p>
         </article>
       </aside>
     </main>
