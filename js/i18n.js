@@ -34,8 +34,8 @@
       annualReturn: 'Rendement annuel moyen',
       duration: 'Durée d’investissement',
       strategies: 'Stratégies',
-      chooseHypothesis: 'Choisissez une hypothèse',
-      strategyAria: 'Hypothèses de rendement',
+      chooseHypothesis: 'Choisissez votre stratégie',
+      strategyAria: 'Stratégies de rendement',
       income: 'Revenu',
       incomeDesc: 'Priorité à la stabilité',
       balanced: 'Équilibré',
@@ -43,8 +43,8 @@
       growth: 'Croissance',
       growthDesc: 'Potentiel de croissance accru',
       equities: 'Actions',
-      equitiesDesc: 'Hypothèse la plus dynamique',
-      strategyNote: 'Ces rendements sont des hypothèses de simulation, pas des performances garanties.',
+      equitiesDesc: 'Stratégie la plus dynamique',
+      strategyNote: 'Ces rendements correspondent à des stratégies de simulation, pas à des performances garanties.',
       perMonth: '/mois',
       perWeek: '/semaine',
       year: 'an',
@@ -81,8 +81,8 @@
       annualReturn: 'Durchschnittliche Jahresrendite',
       duration: 'Anlagedauer',
       strategies: 'Strategien',
-      chooseHypothesis: 'Annahme auswählen',
-      strategyAria: 'Renditeannahmen',
+      chooseHypothesis: 'Strategie auswählen',
+      strategyAria: 'Renditestrategien',
       income: 'Ertrag',
       incomeDesc: 'Stabilität im Vordergrund',
       balanced: 'Ausgewogen',
@@ -90,8 +90,8 @@
       growth: 'Wachstum',
       growthDesc: 'Höheres Wachstumspotenzial',
       equities: 'Aktien',
-      equitiesDesc: 'Dynamischste Annahme',
-      strategyNote: 'Diese Renditen sind Simulationsannahmen und keine garantierten Ergebnisse.',
+      equitiesDesc: 'Dynamischste Strategie',
+      strategyNote: 'Diese Renditen entsprechen Simulationsstrategien und sind keine garantierten Ergebnisse.',
       perMonth: '/Monat',
       perWeek: '/Woche',
       year: 'Jahr',
@@ -128,8 +128,8 @@
       annualReturn: 'Average annual return',
       duration: 'Investment duration',
       strategies: 'Strategies',
-      chooseHypothesis: 'Choose an assumption',
-      strategyAria: 'Return assumptions',
+      chooseHypothesis: 'Choose your strategy',
+      strategyAria: 'Return strategies',
       income: 'Income',
       incomeDesc: 'Stability first',
       balanced: 'Balanced',
@@ -137,8 +137,8 @@
       growth: 'Growth',
       growthDesc: 'Higher growth potential',
       equities: 'Equities',
-      equitiesDesc: 'Most dynamic assumption',
-      strategyNote: 'These returns are simulation assumptions, not guaranteed performance.',
+      equitiesDesc: 'Most dynamic strategy',
+      strategyNote: 'These returns correspond to simulation strategies, not guaranteed performance.',
       perMonth: '/month',
       perWeek: '/week',
       year: 'year',
@@ -170,7 +170,7 @@
 
     var ariaNodes = scope.querySelectorAll('[data-i18n-aria-label]');
     for (var j = 0; j < ariaNodes.length; j += 1) {
-      ariaNodes[j].setAttribute('aria-label', t(ariaNodes[j].getAttribute('data-i18n-aria-label')));
+      ariaNodes[j].setAttribute('aria-label', t(ariaNodes[j].getAttribute('data-i18n-aria-label'));
     }
 
     document.documentElement.lang = currentLanguage;
