@@ -78,8 +78,8 @@ h2 { margin-bottom: 0; font-size: 1.18rem; letter-spacing: -0.02em; }
 .chart-unit-label { fill: #5f5a74; font-size: 13px; font-weight: 800; letter-spacing: .05em; }
 .chart-area { fill: url(#portfolio-fill); }
 .chart-line { fill: none; vector-effect: non-scaling-stroke; }
-.chart-line-portfolio { stroke: var(--purple); stroke-width: 4; }
-.chart-line-invested { stroke: #d0a800; stroke-width: 3; stroke-dasharray: 7 7; }
+.chart-line-portfolio { stroke: var(--purple); stroke-width: 3; }
+.chart-line-invested { stroke: #d0a800; stroke-width: 2.25; stroke-dasharray: 7 7; }
 .chart-endpoint { vector-effect: non-scaling-stroke; stroke: #fff; stroke-width: 2; }
 .portfolio-endpoint { fill: var(--purple); }
 .invested-endpoint { fill: #d0a800; }
