@@ -6,14 +6,20 @@
     selectedStrategy: 'income'
   };
 
-  const formatCurrency = new Intl.NumberFormat('fr-CH', {
-    style: 'currency',
-    currency: 'CHF',
-    maximumFractionDigits: 0
-  });
+  function i18n() {
+    return window.InvestmentI18n;
+  }
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat(i18n().getLocale(), {
+      style: 'currency',
+      currency: 'CHF',
+      maximumFractionDigits: 0
+    }).format(value);
+  }
 
   function formatPercent(value, digits) {
-    return `${(value * 100).toLocaleString('fr-CH', {
+    return `${(value * 100).toLocaleString(i18n().getLocale(), {
       minimumFractionDigits: digits,
       maximumFractionDigits: digits
     })} %`;
@@ -33,6 +39,7 @@
       investedCapital: document.getElementById('invested-capital'),
       gains: document.getElementById('gains'),
       performance: document.getElementById('performance'),
+      languageButton: document.getElementById('language-button'),
       frequencyButtons: Array.from(document.querySelectorAll('.frequency-button')),
       strategyButtons: Array.from(document.querySelectorAll('.strategy-button')),
       portfolioChart: document.getElementById('portfolio-chart')
@@ -50,16 +57,16 @@
   }
 
   function updateOutputs(elements, inputs, result) {
-    const frequencySuffix = inputs.contributionFrequency === 'weekly' ? '/semaine' : '/mois';
+    const frequencySuffix = inputs.contributionFrequency === 'weekly' ? i18n().t('perWeek') : i18n().t('perMonth');
 
-    elements.initialCapitalOutput.textContent = formatCurrency.format(inputs.initialCapital);
-    elements.contributionOutput.textContent = `${formatCurrency.format(inputs.contribution)}${frequencySuffix}`;
+    elements.initialCapitalOutput.textContent = formatCurrency(inputs.initialCapital);
+    elements.contributionOutput.textContent = `${formatCurrency(inputs.contribution)}${frequencySuffix}`;
     elements.annualReturnOutput.textContent = formatPercent(inputs.annualReturn, 1);
-    elements.durationYearsOutput.textContent = `${inputs.durationYears} ${inputs.durationYears === 1 ? 'an' : 'ans'}`;
+    elements.durationYearsOutput.textContent = `${inputs.durationYears} ${i18n().t(inputs.durationYears === 1 ? 'year' : 'years')}`;
 
-    elements.portfolioValue.textContent = formatCurrency.format(result.portfolioValue);
-    elements.investedCapital.textContent = formatCurrency.format(result.investedCapital);
-    elements.gains.textContent = formatCurrency.format(result.gains);
+    elements.portfolioValue.textContent = formatCurrency(result.portfolioValue);
+    elements.investedCapital.textContent = formatCurrency(result.investedCapital);
+    elements.gains.textContent = formatCurrency(result.gains);
     elements.performance.textContent = formatPercent(result.performance, 1);
   }
 
@@ -71,6 +78,11 @@
     });
   }
 
+  function updateLanguage(elements) {
+    i18n().apply(document);
+    if (elements.languageButton) elements.languageButton.textContent = i18n().getLanguage().toUpperCase();
+  }
+
   function refresh(elements) {
     const inputs = readInputs(elements);
     const result = window.InvestmentSimulation.simulateInvestment(inputs);
@@ -80,7 +92,7 @@
       try {
         window.InvestmentChart.renderChart(elements.portfolioChart, result);
       } catch (error) {
-        console.error('Erreur de rendu du graphique :', error);
+        console.error('Chart rendering error:', error);
       }
     }
 
@@ -109,15 +121,9 @@
 
   function init() {
     const elements = getElements();
-    const rangeInputs = [
-      elements.initialCapital,
-      elements.contribution,
-      elements.durationYears
-    ];
+    const rangeInputs = [elements.initialCapital, elements.contribution, elements.durationYears];
 
-    rangeInputs.forEach((input) => {
-      input.addEventListener('input', () => refresh(elements));
-    });
+    rangeInputs.forEach((input) => input.addEventListener('input', () => refresh(elements)));
 
     elements.annualReturn.addEventListener('input', () => {
       state.selectedStrategy = null;
@@ -133,6 +139,15 @@
       button.addEventListener('click', () => setStrategy(elements, button.dataset.strategy));
     });
 
+    if (elements.languageButton) {
+      elements.languageButton.addEventListener('click', () => {
+        i18n().nextLanguage();
+        updateLanguage(elements);
+        refresh(elements);
+      });
+    }
+
+    updateLanguage(elements);
     updateStrategySelection(elements);
     refresh(elements);
   }
