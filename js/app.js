@@ -32,12 +32,6 @@
       investedCapital: document.getElementById('invested-capital'),
       gains: document.getElementById('gains'),
       performance: document.getElementById('performance'),
-      detailInitial: document.getElementById('detail-initial'),
-      detailContributions: document.getElementById('detail-contributions'),
-      detailCount: document.getElementById('detail-count'),
-      detailReturn: document.getElementById('detail-return'),
-      detailDuration: document.getElementById('detail-duration'),
-      detailFrequency: document.getElementById('detail-frequency'),
       frequencyButtons: Array.from(document.querySelectorAll('.frequency-button')),
       portfolioChart: document.getElementById('portfolio-chart')
     };
@@ -65,13 +59,6 @@
     elements.investedCapital.textContent = formatCurrency.format(result.investedCapital);
     elements.gains.textContent = formatCurrency.format(result.gains);
     elements.performance.textContent = formatPercent(result.performance, 1);
-
-    elements.detailInitial.textContent = formatCurrency.format(result.initialCapital);
-    elements.detailContributions.textContent = formatCurrency.format(result.totalContributions);
-    elements.detailCount.textContent = result.contributionCount.toLocaleString('fr-CH');
-    elements.detailReturn.textContent = formatPercent(inputs.annualReturn, 1);
-    elements.detailDuration.textContent = `${inputs.durationYears} ${inputs.durationYears === 1 ? 'an' : 'ans'}`;
-    elements.detailFrequency.textContent = inputs.contributionFrequency === 'weekly' ? 'Hebdomadaire' : 'Mensuelle';
   }
 
   function refresh(elements) {
