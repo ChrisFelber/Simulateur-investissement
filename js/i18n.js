@@ -32,6 +32,8 @@
       monthly: 'Mensuel',
       weekly: 'Hebdomadaire',
       annualReturn: 'Rendement annuel moyen',
+      customizeReturn: 'Personnaliser le rendement',
+      hideCustomReturn: 'Masquer le rendement personnalisé',
       duration: 'Durée d’investissement',
       strategies: 'Stratégies',
       chooseHypothesis: 'Choisis ta stratégie',
@@ -79,6 +81,8 @@
       monthly: 'Monatlich',
       weekly: 'Wöchentlich',
       annualReturn: 'Durchschnittliche Jahresrendite',
+      customizeReturn: 'Rendite selbst anpassen',
+      hideCustomReturn: 'Eigene Rendite ausblenden',
       duration: 'Anlagedauer',
       strategies: 'Strategien',
       chooseHypothesis: 'Wähle deine Strategie',
@@ -126,6 +130,8 @@
       monthly: 'Monthly',
       weekly: 'Weekly',
       annualReturn: 'Average annual return',
+      customizeReturn: 'Customise the return',
+      hideCustomReturn: 'Hide custom return',
       duration: 'Investment duration',
       strategies: 'Strategies',
       chooseHypothesis: 'Choose your strategy',
@@ -170,7 +176,7 @@
 
     var ariaNodes = scope.querySelectorAll('[data-i18n-aria-label]');
     for (var j = 0; j < ariaNodes.length; j += 1) {
-      ariaNodes[j].setAttribute('aria-label', t(ariaNodes[j].getAttribute('data-i18n-aria-label')));
+      ariaNodes[j].setAttribute('aria-label', t(ariaNodes[j].getAttribute('data-i18n-aria-label'));
     }
 
     document.documentElement.lang = currentLanguage;
