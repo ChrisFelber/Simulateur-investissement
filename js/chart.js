@@ -21,12 +21,26 @@
   function formatCompactCurrency(value) {
     var absolute = Math.abs(value);
     if (absolute >= 1000000) {
-      return (value / 1000000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + ' M';
+      return Math.round(value / 1000000) + 'M';
     }
     if (absolute >= 1000) {
-      return (value / 1000).toLocaleString('fr-CH', { maximumFractionDigits: 1 }) + 'k';
+      return Math.round(value / 1000) + 'k';
     }
-    return Math.round(value).toLocaleString('fr-CH');
+    return String(Math.round(value));
+  }
+
+  function getNiceStep(value) {
+    if (value <= 0) return 1;
+    var exponent = Math.floor(Math.log(value) / Math.LN10);
+    var fraction = value / Math.pow(10, exponent);
+    var niceFraction;
+
+    if (fraction <= 1) niceFraction = 1;
+    else if (fraction <= 2) niceFraction = 2;
+    else if (fraction <= 5) niceFraction = 5;
+    else niceFraction = 10;
+
+    return niceFraction * Math.pow(10, exponent);
   }
 
   function getNiceYearStep(maxYears) {
@@ -59,7 +73,14 @@
       maxValue = Math.max(maxValue, series[i].portfolioValue, series[i].investedCapital);
     }
 
-    var niceMax = maxValue * 1.08;
+    var yTicks = isMobile ? 3 : 4;
+    var yStep = getNiceStep(maxValue / yTicks);
+    var niceMax = yStep * yTicks;
+    if (niceMax < maxValue) {
+      niceMax += yStep;
+      yTicks += 1;
+    }
+
     var maxYears = Math.max(Number(simulation.params.durationYears) || 1, 1);
 
     function x(years) {
@@ -96,7 +117,6 @@
     svg.appendChild(defs);
 
     var gridGroup = createSvgElement('g', { class: 'chart-grid' });
-    var yTicks = isMobile ? 3 : 4;
 
     if (isMobile) {
       var unitLabel = createSvgElement('text', {
@@ -110,7 +130,7 @@
     }
 
     for (i = 0; i <= yTicks; i += 1) {
-      var value = (niceMax / yTicks) * i;
+      var value = yStep * i;
       var py = y(value);
       gridGroup.appendChild(createSvgElement('line', {
         x1: padding.left,
