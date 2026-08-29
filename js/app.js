@@ -38,7 +38,8 @@
       detailReturn: document.getElementById('detail-return'),
       detailDuration: document.getElementById('detail-duration'),
       detailFrequency: document.getElementById('detail-frequency'),
-      frequencyButtons: Array.from(document.querySelectorAll('.frequency-button'))
+      frequencyButtons: Array.from(document.querySelectorAll('.frequency-button')),
+      portfolioChart: document.getElementById('portfolio-chart')
     };
   }
 
@@ -77,6 +78,7 @@
     const inputs = readInputs(elements);
     const result = window.InvestmentSimulation.simulateInvestment(inputs);
     updateOutputs(elements, inputs, result);
+    window.InvestmentChart.renderChart(elements.portfolioChart, result);
     window.currentInvestmentSimulation = result;
   }
 
