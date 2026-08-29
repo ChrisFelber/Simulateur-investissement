@@ -91,6 +91,7 @@ h2 { margin-bottom: 0; font-size: 1.18rem; letter-spacing: -0.02em; }
 .control-heading { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 16px; }
 .control-heading label { font-weight: 800; }
 .control-heading output { color: var(--purple-dark); font-weight: 900; white-space: nowrap; }
+.custom-return-group[hidden] { display: none; }
 
 .frequency-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 5px; margin-bottom: 18px; border-radius: 14px; background: var(--surface-soft); }
 .frequency-button { border: 0; border-radius: 10px; padding: 10px 12px; background: transparent; color: var(--muted); font-weight: 800; cursor: pointer; }
@@ -125,6 +126,17 @@ input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer;
 .strategy-topline strong { font-size: .95rem; }
 .strategy-topline b { color: var(--purple-dark); font-size: .95rem; white-space: nowrap; }
 .strategy-button small { display: block; color: var(--muted); line-height: 1.35; font-size: .76rem; }
+.custom-return-button {
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--purple-dark);
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .strategy-note { margin: 14px 2px 0; color: var(--muted); font-size: .75rem; line-height: 1.45; }
 
 @media (max-width: 980px) {
